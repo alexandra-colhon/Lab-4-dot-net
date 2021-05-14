@@ -42,6 +42,17 @@ namespace Lab_2.Controllers
         }
 
 
+        // GET: api/Expenses/filterlambda
+        [HttpGet("{DateTime & DateTime & string}")]
+        [Route("filterlambda")]
+        public ActionResult<IEnumerable<Expenses>> FilterLambdaExpenses(DateTime from, DateTime to, string type)
+        {
+            var query = _context.Expenses.Where(e => e.Date >= from && e.Date<=to && e.Type == type);
+            Console.WriteLine(query.ToQueryString());
+            return query.ToList();
+
+        }
+
         // GET: api/Expenses
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Expenses>>> GetExpenses()
