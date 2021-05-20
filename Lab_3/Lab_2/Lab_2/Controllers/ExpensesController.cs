@@ -25,7 +25,13 @@ namespace Lab_2.Controllers
             _mapper = mapper;
         }
 
-
+        /// <summary>
+        /// Filters the expenses betweend certain dates and with a specific type
+        /// </summary>
+        /// <param name="from">the first date</param>
+        /// <param name="to">until date</param>
+        /// <param name="type">type of expenses</param>
+        /// <returns>A list of expenses with the date bigger from date and less then to date and with the given type</returns>
         // GET: api/Expenses/filter
         [HttpGet("{DateTime & DateTime & string}/filter")]
         public ActionResult<IEnumerable<Expenses>> FilterExpenses(DateTime from, DateTime to, string type)
@@ -45,6 +51,13 @@ namespace Lab_2.Controllers
         }
 
 
+        /// <summary>
+        /// Filters the expenses betweend certain dates and with a specific type
+        /// </summary>
+        /// <param name="from">the first date</param>
+        /// <param name="to">until date</param>
+        /// <param name="type">type of expenses</param>
+        /// <returns>A list of expenses with the date bigger from date and less then to date and with the given type</returns>
         // GET: api/Expenses/filterlambda
         [HttpGet("{DateTime & DateTime & string}/filterlambda")]
         public ActionResult<IEnumerable<Expenses>> FilterLambdaExpenses(DateTime from, DateTime to, string type)
@@ -55,6 +68,11 @@ namespace Lab_2.Controllers
         }
 
 
+        /// <summary>
+        /// Returns the comments for a given expense
+        /// </summary>
+        /// <param name="id">the id of the expense</param>
+        /// <returns>A list with all the comments of a certain expense</returns>
         // GET: api/Expenses/5/Comments
         [HttpGet("{id}/comments")]
         public ActionResult<IEnumerable<ExpensesWithCommentsViewModel>> GetCommentsForExpenses(int id)
@@ -64,6 +82,12 @@ namespace Lab_2.Controllers
         }
 
 
+        /// <summary>
+        /// A comment for an expense is added
+        /// </summary>
+        /// <param name="id">the id of the expense</param>
+        /// <param name="comment">the added comment </param>
+        /// <returns>Returns 1 if the comment was added and an error if not</returns>
         // POST: api/Expenses/5/Comments
         [HttpPost("{id}/comments")]
         public IActionResult PostCommentForExpenses(int id, Comments comment)
@@ -80,6 +104,10 @@ namespace Lab_2.Controllers
         }
 
 
+        /// <summary>
+        /// Returns all the existing expenses 
+        /// </summary>
+        /// <returns>A list with all the expenses</returns>
         // GET: api/Expenses
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Expenses>>> GetExpenses()
@@ -88,6 +116,11 @@ namespace Lab_2.Controllers
         }
 
 
+        /// <summary>
+        /// Returns an expense with a given id
+        /// </summary>
+        /// <param name="id">the id of the expense</param>
+        /// <returns>Returns the expense if the id is valid</returns>
         // GET: api/Expenses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ExpensesViewModel>> GetExpenses(int id)
@@ -103,6 +136,12 @@ namespace Lab_2.Controllers
         }
 
 
+        /// <summary>
+        /// Updates an expense if it exists
+        /// </summary>
+        /// <param name="id">the id of the expense to update</param>
+        /// <param name="expenses">the expense to update</param>
+        /// <returns>Returns 1 if the update did take place</returns>
         // PUT: api/Expenses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -135,6 +174,11 @@ namespace Lab_2.Controllers
         }
 
 
+        /// <summary>
+        /// A new expense is added
+        /// </summary>
+        /// <param name="expenses">the expense to be added</param>
+        /// <returns>Returns the expense</returns>
         // POST: api/Expenses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -147,6 +191,11 @@ namespace Lab_2.Controllers
         }
 
 
+        /// <summary>
+        /// A certain expense is deleted
+        /// </summary>
+        /// <param name="id">the id of the expese to delete</param>
+        /// <returns>Returns 1 if the expense is deleted</returns>
         // DELETE: api/Expenses/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExpenses(int id)
