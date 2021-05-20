@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Lab_2.Data;
 using Lab_2.Models;
 using Lab_2.ViewModel;
+using AutoMapper;
 
 namespace Lab_2.Controllers
 {
@@ -16,16 +17,17 @@ namespace Lab_2.Controllers
     public class ExpensesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ExpensesController(ApplicationDbContext context)
+        public ExpensesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
         // GET: api/Expenses/filter
-        [HttpGet("{DateTime & DateTime & string}")]
-        [Route("filter")]
+        [HttpGet("{DateTime & DateTime & string}/filter")]
         public ActionResult<IEnumerable<Expenses>> FilterExpenses(DateTime from, DateTime to, string type)
         {
             var expenses = _context.Expenses.ToList();
@@ -44,8 +46,7 @@ namespace Lab_2.Controllers
 
 
         // GET: api/Expenses/filterlambda
-        [HttpGet("{DateTime & DateTime & string}")]
-        [Route("filterlambda")]
+        [HttpGet("{DateTime & DateTime & string}/filterlambda")]
         public ActionResult<IEnumerable<Expenses>> FilterLambdaExpenses(DateTime from, DateTime to, string type)
         {
             var query = _context.Expenses.Where(e => e.Date >= from && e.Date<=to && e.Type == type);
@@ -53,28 +54,17 @@ namespace Lab_2.Controllers
 
         }
 
+
+        // GET: api/Expenses/5/Comments
         [HttpGet("{id}/comments")]
         public ActionResult<IEnumerable<ExpensesWithCommentsViewModel>> GetCommentsForExpenses(int id)
         {
-            var query = _context.Comments.Where(c => c.Expenses.Id == id).Include(c => c.Expenses).Select(c => new ExpensesWithCommentsViewModel
-            { 
-                Id = c.Expenses.Id,
-                Description = c.Expenses.Description,
-                Sum = c.Expenses.Sum,
-                Location = c.Expenses.Location,
-                Date = c.Expenses.Date,
-                Currency =c.Expenses.Currency,
-                Type = c.Expenses.Type,
-                Comments = c.Expenses.Comments.Select(e => new CommentsViewModel
-                {
-                    Id = e.Id, 
-                    Content =e.Content , 
-                    Important =e.Important
-                })
-            });
+            var query = _context.Expenses.Where(e => e.Id == id).Include(e => e.Comments).Select(e => _mapper.Map<ExpensesWithCommentsViewModel>(e));
             return query.ToList();
         }
 
+
+        // POST: api/Expenses/5/Comments
         [HttpPost("{id}/comments")]
         public IActionResult PostCommentForExpenses(int id, Comments comment)
         {
@@ -89,6 +79,7 @@ namespace Lab_2.Controllers
             return Ok();
         }
 
+
         // GET: api/Expenses
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Expenses>>> GetExpenses()
@@ -96,19 +87,21 @@ namespace Lab_2.Controllers
             return await _context.Expenses.ToListAsync();
         }
 
+
         // GET: api/Expenses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Expenses>> GetExpenses(int id)
+        public async Task<ActionResult<ExpensesViewModel>> GetExpenses(int id)
         {
-            var expenses = await _context.Expenses.FindAsync(id);
-
-            if (expenses == null)
+            var expense = await _context.Expenses.FindAsync(id);
+            if (expense == null)
             {
                 return NotFound();
             }
+            var expenseViewModel = _mapper.Map<ExpensesViewModel>(expense);
 
-            return expenses;
+            return expenseViewModel;
         }
+
 
         // PUT: api/Expenses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -141,6 +134,7 @@ namespace Lab_2.Controllers
             return NoContent();
         }
 
+
         // POST: api/Expenses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -151,6 +145,7 @@ namespace Lab_2.Controllers
 
             return CreatedAtAction("GetExpenses", new { id = expenses.Id }, expenses);
         }
+
 
         // DELETE: api/Expenses/5
         [HttpDelete("{id}")]
@@ -167,6 +162,7 @@ namespace Lab_2.Controllers
 
             return NoContent();
         }
+
 
         private bool ExpensesExists(int id)
         {
