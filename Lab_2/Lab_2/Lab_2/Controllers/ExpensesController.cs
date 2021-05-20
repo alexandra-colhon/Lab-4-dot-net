@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab_2.Data;
 using Lab_2.Models;
+using Lab_2.ViewModel;
 
 namespace Lab_2.Controllers
 {
@@ -48,9 +49,44 @@ namespace Lab_2.Controllers
         public ActionResult<IEnumerable<Expenses>> FilterLambdaExpenses(DateTime from, DateTime to, string type)
         {
             var query = _context.Expenses.Where(e => e.Date >= from && e.Date<=to && e.Type == type);
-            Console.WriteLine(query.ToQueryString());
             return query.ToList();
 
+        }
+
+        [HttpGet("{id}/comments")]
+        public ActionResult<IEnumerable<ExpensesWithCommentsViewModel>> GetCommentsForExpenses(int id)
+        {
+            var query = _context.Comments.Where(c => c.Expenses.Id == id).Include(c => c.Expenses).Select(c => new ExpensesWithCommentsViewModel
+            { 
+                Id = c.Expenses.Id,
+                Description = c.Expenses.Description,
+                Sum = c.Expenses.Sum,
+                Location = c.Expenses.Location,
+                Date = c.Expenses.Date,
+                Currency =c.Expenses.Currency,
+                Type = c.Expenses.Type,
+                Comments = c.Expenses.Comments.Select(e => new CommentsViewModel
+                {
+                    Id = e.Id, 
+                    Content =e.Content , 
+                    Important =e.Important
+                })
+            });
+            return query.ToList();
+        }
+
+        [HttpPost("{id}/comments")]
+        public IActionResult PostCommentForExpenses(int id, Comments comment)
+        {
+            comment.Expenses = _context.Expenses.Find(id);
+            if(comment.Expenses == null)
+            {
+                return NotFound();
+            }
+            _context.Comments.Add(comment);
+            _context.SaveChanges();
+
+            return Ok();
         }
 
         // GET: api/Expenses

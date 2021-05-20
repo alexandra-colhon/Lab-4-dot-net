@@ -187,6 +187,29 @@ namespace Lab_2.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Lab_2.Models.Comments", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ExpensesId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Important")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpensesId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Lab_2.Models.Expenses", b =>
                 {
                     b.Property<int>("Id")
@@ -354,6 +377,15 @@ namespace Lab_2.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Lab_2.Models.Comments", b =>
+                {
+                    b.HasOne("Lab_2.Models.Expenses", "Expenses")
+                        .WithMany("Comments")
+                        .HasForeignKey("ExpensesId");
+
+                    b.Navigation("Expenses");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -403,6 +435,11 @@ namespace Lab_2.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Lab_2.Models.Expenses", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
