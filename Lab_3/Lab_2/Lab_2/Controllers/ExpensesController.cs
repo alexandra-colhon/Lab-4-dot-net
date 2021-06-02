@@ -9,6 +9,7 @@ using Lab_2.Data;
 using Lab_2.Models;
 using Lab_2.ViewModel;
 using AutoMapper;
+using Type = Lab_2.Models.Type;
 
 namespace Lab_2.Controllers
 {
@@ -33,7 +34,7 @@ namespace Lab_2.Controllers
         /// <param name="type">type of expenses</param>
         /// <returns>A list of expenses with the date bigger from date and less then to date and with the given type</returns>
         // GET: api/Expenses/filter
-        [HttpGet("{DateTime & DateTime & string}/filter")]
+        [HttpGet("{DateTime & DateTime & Type}/filter")]
         public ActionResult<IEnumerable<Expenses>> FilterExpenses(DateTime from, DateTime to, string type)
         {
             var expenses = _context.Expenses.ToList();
@@ -47,7 +48,7 @@ namespace Lab_2.Controllers
                 }
             }
             return filtered.ToList();
-    
+
         }
 
 
@@ -59,10 +60,10 @@ namespace Lab_2.Controllers
         /// <param name="type">type of expenses</param>
         /// <returns>A list of expenses with the date bigger from date and less then to date and with the given type</returns>
         // GET: api/Expenses/filterlambda
-        [HttpGet("{DateTime & DateTime & string}/filterlambda")]
-        public ActionResult<IEnumerable<Expenses>> FilterLambdaExpenses(DateTime from, DateTime to, string type)
+        [HttpGet("{DateTime & DateTime & Type}/lambdafilter")]
+        public ActionResult<IEnumerable<ExpensesViewModel>> FilterLambdaExpenses(DateTime from, DateTime to, string type)
         {
-            var query = _context.Expenses.Where(e => e.Date >= from && e.Date<=to && e.Type == type);
+            var query = _context.Expenses.Where(e => e.Date >= from && e.Date <= to && e.Type == type).Select(e => _mapper.Map<ExpensesViewModel>(e));
             return query.ToList();
 
         }
@@ -90,10 +91,12 @@ namespace Lab_2.Controllers
         /// <returns>Returns 1 if the comment was added and an error if not</returns>
         // POST: api/Expenses/5/Comments
         [HttpPost("{id}/comments")]
-        public IActionResult PostCommentForExpenses(int id, Comments comment)
+        public IActionResult PostCommentForExpenses(int id, CommentsInput commentInput)
         {
+            var comment = _mapper.Map<Comments>(commentInput);
+
             comment.Expenses = _context.Expenses.Find(id);
-            if(comment.Expenses == null)
+            if (comment.Expenses == null)
             {
                 return NotFound();
             }
@@ -110,9 +113,10 @@ namespace Lab_2.Controllers
         /// <returns>A list with all the expenses</returns>
         // GET: api/Expenses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Expenses>>> GetExpenses()
+        public async Task<ActionResult<IEnumerable<ExpensesViewModel>>> GetExpenses()
         {
-            return await _context.Expenses.ToListAsync();
+            var query = _context.Expenses.Select(e => _mapper.Map<ExpensesViewModel>(e));
+            return await query.ToListAsync();
         }
 
 
@@ -145,8 +149,10 @@ namespace Lab_2.Controllers
         // PUT: api/Expenses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutExpenses(int id, Expenses expenses)
+        public async Task<IActionResult> PutExpenses(int id, ExpensesInput expensesInput)
         {
+            var expenses = _mapper.Map<Expenses>(expensesInput);
+
             if (id != expenses.Id)
             {
                 return BadRequest();
@@ -182,8 +188,10 @@ namespace Lab_2.Controllers
         // POST: api/Expenses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Expenses>> PostExpenses(Expenses expenses)
+        public async Task<ActionResult<Expenses>> PostExpenses(ExpensesInput expensesInput)
         {
+            var expenses = _mapper.Map<Expenses>(expensesInput);
+
             _context.Expenses.Add(expenses);
             await _context.SaveChangesAsync();
 

@@ -15,6 +15,8 @@ namespace Lab_2
             CreateMap<Expenses, ExpensesViewModel>();
             CreateMap<Comments, CommentsViewModel>();
             CreateMap<Expenses, ExpensesWithCommentsViewModel>();
+            CreateMap<ExpensesInput, Expenses>();
+            CreateMap<CommentsInput, Comments>();
         }
 
 
