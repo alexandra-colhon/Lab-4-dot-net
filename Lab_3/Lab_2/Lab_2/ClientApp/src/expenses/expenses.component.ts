@@ -9,15 +9,4 @@ import { Expenses } from './expenses.model';
 })
 export class ExpensesComponent{
 
-  public expenses: Expenses[];
-
-  constructor(http: HttpClient, @Inject('API_URL') apiUrl: string) {
-    http.get<Expenses[]>(apiUrl + 'expenses').subscribe(result => {
-      this.expenses = result;
-    }, error => console.error(error));
-  }
-
-  ngOnInit() {
-  }
-
 }

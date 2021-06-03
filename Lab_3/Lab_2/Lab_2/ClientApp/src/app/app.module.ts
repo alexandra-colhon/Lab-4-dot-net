@@ -12,7 +12,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
-import { ExpensesComponent } from '../expenses/expenses.component';
+import { ExpensesListComponent } from '../expenses/expenses-list/expenses-list.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,7 @@ import { ExpensesComponent } from '../expenses/expenses.component';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    ExpensesComponent
+    ExpensesListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,7 +32,7 @@ import { ExpensesComponent } from '../expenses/expenses.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
-      { path: 'expenses', component: ExpensesComponent }
+      { path: 'expenses', component: ExpensesListComponent }
     ])
   ],
   providers: [
