@@ -10,9 +10,11 @@ using Lab_2.Models;
 using Lab_2.ViewModel;
 using AutoMapper;
 using Type = Lab_2.Models.Type;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab_2.Controllers
 {
+    //[Authorize(AuthenticationSchemes = "Identity.Application,Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class ExpensesController : ControllerBase
@@ -87,7 +89,7 @@ namespace Lab_2.Controllers
         /// A comment for an expense is added
         /// </summary>
         /// <param name="id">the id of the expense</param>
-        /// <param name="comment">the added comment </param>
+        /// <param name="commentInput">the added comment </param>
         /// <returns>Returns 1 if the comment was added and an error if not</returns>
         // POST: api/Expenses/5/Comments
         [HttpPost("{id}/comments")]
@@ -144,7 +146,7 @@ namespace Lab_2.Controllers
         /// Updates an expense if it exists
         /// </summary>
         /// <param name="id">the id of the expense to update</param>
-        /// <param name="expenses">the expense to update</param>
+        /// <param name="expensesInput">the expense to update</param>
         /// <returns>Returns 1 if the update did take place</returns>
         // PUT: api/Expenses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -183,7 +185,7 @@ namespace Lab_2.Controllers
         /// <summary>
         /// A new expense is added
         /// </summary>
-        /// <param name="expenses">the expense to be added</param>
+        /// <param name="expensesInput">the expense to be added</param>
         /// <returns>Returns the expense</returns>
         // POST: api/Expenses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

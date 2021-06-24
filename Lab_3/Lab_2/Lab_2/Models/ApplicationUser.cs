@@ -8,5 +8,6 @@ namespace Lab_2.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public List<Orders> Orders { get; set; }
     }
 }

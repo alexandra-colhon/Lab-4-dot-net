@@ -15,6 +15,8 @@ namespace Lab_2.Data
 
         public DbSet<Expenses> Expenses { get; set; }
         public DbSet<Comments> Comments { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Orders> Orders { get; set; }
 
         public ApplicationDbContext(
             DbContextOptions options,

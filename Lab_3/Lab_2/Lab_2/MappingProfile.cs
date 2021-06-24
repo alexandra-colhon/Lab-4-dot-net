@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Lab_2.Models;
 using Lab_2.ViewModel;
+using Lab_2.ViewModel.Order;
 
 namespace Lab_2
 {
@@ -17,6 +18,9 @@ namespace Lab_2
             CreateMap<Expenses, ExpensesWithCommentsViewModel>();
             CreateMap<ExpensesInput, Expenses>();
             CreateMap<CommentsInput, Comments>();
+            CreateMap<ApplicationUser, ApplicationUserViewModel>().ReverseMap();
+            CreateMap<Orders, OrdersViewModel>();
+            CreateMap<OrdersInput, Orders>();
         }
 
 

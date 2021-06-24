@@ -45,5 +45,7 @@ namespace Lab_2.Models
 
         public List<Comments> Comments { get; set; }
 
+        public List<Orders> Orders { get; set; }
+
     }
 }
